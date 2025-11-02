@@ -1,0 +1,9 @@
+@import url("./Global.css");
+
+body {
+    text-align: center;
+}
+
+.register {
+    width: 100%;
+}
