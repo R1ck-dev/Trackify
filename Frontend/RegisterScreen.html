@@ -1,39 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/registerScreen.css">
     <title>Criar Conta</title>
+    <link rel="stylesheet" href="assets/css/Register.css">
 </head>
 <body>
-    <header></header>
-    <main>
-        <section class="register">
+    <main class="container">
+        <section class="card">
             <h1>Criar Conta</h1>
             <p>Registre-se em poucos minutos</p>
-            <form class="register__informations" id="register-form">
+
+            <form class="form" id="register-form">
                 <label for="register__username-user">Nome de Usuário</label>
-                <input type="text" name="username" id="register__username-user">
+                <input type="text" name="username" id="register__username-user" placeholder="Seu nome de usuário">
 
                 <label for="register__email-user">Email</label>
-                <input type="text" name="email" id="register__email-user">
+                <input type="email" name="email" id="register__email-user" placeholder="exemplo@email.com">
 
                 <label for="register__password-user">Senha</label>
-                <input type="password" name="password" id="register__password-user">
+                <input type="password" name="password" id="register__password-user" placeholder="Digite sua senha">
 
                 <label for="register__confirm-password-user">Confirmando Senha</label>
-                <input type="password" name="confirm-password" id="register__confirm-password-user">
+                <input type="password" name="confirm-password" id="register__confirm-password-user" placeholder="Confirme sua senha">
 
-                <br>
                 <button type="submit">Continuar</button>
             </form>
-        </section>
-        <section class="already-has-account">
-            <p>Já tem uma conta? <span><a href="LoginScreen.html">Fazer Login</a></span></p>
+
+            <p class="redirect">Já tem uma conta?
+                <a href="LoginScreen.html">Fazer Login</a>
+            </p>
         </section>
     </main>
-    <footer></footer>
 
     <script src="assets/js/ApiService.js"></script>
     <script src="assets/js/Register.js"></script>
