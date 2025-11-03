@@ -1,9 +1,13 @@
 package br.com.henrique.trackify.Services.Impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import br.com.henrique.trackify.DTOs.MediaDTO;
+import br.com.henrique.trackify.DTOs.Responses.GetMediasFromUserDTO;
 import br.com.henrique.trackify.DTOs.Responses.ResponseToCreateMediaDTO;
 import br.com.henrique.trackify.Models.MediaModel;
 import br.com.henrique.trackify.Models.UserMediaEntryModel;
@@ -65,6 +69,38 @@ public class MediaServiceImpl implements MediaService {
         response.setCoverImageUrl(media.getCoverImageUrl());
 
         return response;
+    }
+// ---------------------------------------------------------------------------------------------------
+
+    @Override
+    public List<GetMediasFromUserDTO> getMyMedia(Authentication authentication) {
+        UserModel currentUser = (UserModel) authentication.getPrincipal();
+
+        List<UserMediaEntryModel> mediaList =  userMediaEntryRepository.findByUser(currentUser);
+
+        return transformMediaToDTO(mediaList);
+
+    }
+
+    public List<GetMediasFromUserDTO> transformMediaToDTO(List<UserMediaEntryModel> mediaList) {
+        
+        List<GetMediasFromUserDTO> responseDTOList = mediaList.stream()
+                .map(entry -> {
+                    GetMediasFromUserDTO dto = new GetMediasFromUserDTO();
+
+                    dto.setId(entry.getId());
+                    dto.setStatus(entry.getStatus());
+                    dto.setRating(entry.getRating());
+
+                    dto.setTitle(entry.getMedia().getTitle());
+                    dto.setAuthor(entry.getMedia().getAuthor());
+                    dto.setCoverImageUrl(entry.getMedia().getCoverImageUrl());
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+            
+            return responseDTOList;
     }
 // ---------------------------------------------------------------------------------------------------
 

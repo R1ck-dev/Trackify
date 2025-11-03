@@ -100,3 +100,29 @@ async function createMediaEntry(mediaData) {
     const createdMedia = await response.json();
     return createdMedia;
 }
+
+async function fetchMediaData() {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+        throw new Error('Usuário não autenticado. Token não encontrado.');
+    }
+
+    const response = await fetch(`${API_BASE_URL}/media`, {
+        method: 'GET',
+
+        headers: {
+            'Content-Type': 'application/json',
+
+            'Authorization': 'Bearer ' + token
+        }
+    });
+
+    if (!response.ok) {
+        console.error('Falha ao buscar dados de mídia. Status: ', response.status);
+        throw new Error('Falha na autenticação.');
+    }
+
+    const mediaData = await response.json();
+    return mediaData;
+}

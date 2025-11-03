@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(`Mídia "${newMedia.title}" salva com sucesso!`);
 
             createMediaForm.reset();
+            loadAndDisplayMedia();
+
         } catch (error) {
             console.error('Erro ao salvar mídia: ', error.message);
             alert(error.message);
@@ -54,6 +56,8 @@ async function checkAuthAndLoadData(params) {
         const userData = await fetchUserData();
 
         populateUserData(userData);
+        await loadAndDisplayMedia();
+
     } catch (error) {
         console.error('Erro na autenticação: ', error.message);
         alert('Sua sessão expirou ou é inválida. Por favor, faça login novamente.');
@@ -67,4 +71,45 @@ function populateUserData(userData) {
     document.getElementById('user-username').textContent = userData.username;
     document.getElementById('user-email').textContent = userData.email;
     document.getElementById('user-role').textContent = userData.role;
+}
+
+async function loadAndDisplayMedia() {
+    try {
+        const mediaList = await fetchMediaData();
+        populateMediaList(mediaList);
+    } catch (error) {
+        console.error('Erro ao carregar lista de mídias:', error.message);
+        alert('Não foi possível carregar sua biblioteca de mídias.');
+    }
+}
+
+function populateMediaList(mediaList) {
+    const listContainer = document.getElementById('media-list');
+    const placeholder = document.getElementById('media-list-placeholder');
+
+    listContainer.innerHTML = '';
+
+    if (mediaList.length === 0) {
+        placeholder.textContent = 'Sua biblioteca está vazia. Adicione sua primeira mídia no formulário acima!';
+        listContainer.appendChild(placeholder);
+        return;
+    }
+
+    mediaList.forEach(media => {
+        const mediaCard = document.createElement('div');
+
+        mediaCard.className = 'media-card';
+
+        mediaCard.innerHTML = `
+            <img src="${media.coverImageUrl || 'assets/images/catatau_placeholder.png'}" alt="" class="media-card-image">
+            <div class="media-card-content">
+                <h3 class="media-card-title">${media.title}</h3>
+                <p class="media-card-author">por ${media.author}</p>
+                <span class="media-card-status">${media.status}</span>
+                <p class="media-card-rating">Nota: ${media.rating || 'N/A'}</p>
+            </div>
+            `;
+
+            listContainer.appendChild(mediaCard);
+    });
 }
