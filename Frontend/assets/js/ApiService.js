@@ -47,7 +47,7 @@ async function loginUser(email, password) {
     return data.token;
 }
 
-async function fecthUserData() {
+async function fetchUserData() {
     const token = localStorage.getItem('authToken');
 
     if (!token) {
@@ -71,4 +71,32 @@ async function fecthUserData() {
 
     const userData = await response.json();
     return userData;
+}
+
+async function createMediaEntry(mediaData) {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+        throw new Error('Usuário não autenticado. Token não encontrado.');
+    }
+
+    const response = await fetch(`${API_BASE_URL}/media`, {
+        method: 'POST',
+
+        headers: {
+            'Content-Type': 'application/json',
+
+            'Authorization': 'Bearer ' + token
+        },
+
+        body: JSON.stringify(mediaData)
+    });
+
+    if (!response.ok) {
+        console.error('Falha ao criar mídia. Status:', response.status);
+        throw new Error('Falha ao salvar a mídia. Verifique os dados.');
+    }
+
+    const createdMedia = await response.json();
+    return createdMedia;
 }

@@ -18,8 +18,43 @@
         </section>
         <section>
             <form id="create-media">
-                <label for=""></label>
-                <input type="text">
+                <label for="create-media__title">Título</label>
+                <input type="text" name="media-title" id="create-media__title">
+
+                <label for="create-media__author">Author</label>
+                <input type="text" name="media-author" id="create-media__author">
+
+                <label for="create-media__type">Tipo</label>
+                <select name="media-type" id="create-media__type">
+                    <option value="BOOK">Livro</option>
+                    <option value="MANGA">Manga</option>
+                    <option value="MANWHA">Manwha</option>
+                </select>
+
+                <label for="create-media__status">Status</label>
+                <select name="media-status" id="create-media__status">
+                    <option value="WANT_TO_READ">Quero Ler</option>
+                    <option value="READING">Lendo</option>
+                    <option value="COMPLETED">Completo</option>
+                    <option value="DROPPED">Dropado</option>
+                    <option value="ON_PACE">Nos Semanais</option>
+                    <option value="HIATUS">Em Hiatu</option>
+                </select>
+
+                <label for="create-media__cover-image">Imagem de Capa</label>
+                <input type="text" name="media-cover-image" id="create-media__cover-image">
+
+                <label for="create-media__description">Descrição</label>
+                <textarea name="media-description" id="create-media__description"></textarea>
+
+                <label for="create-media__rating">Nota</label>
+                <input type="number" name="media-rating" id="create-media__rating" min="0" max="10">
+
+                <label for="create-media__personal-notes">Notas Pessoais</label>
+                <textarea name="media-personal-notes" id="create-media__personal-notes"></textarea>
+
+                <br>
+                <button type="submit">Criar Mídia</button>
             </form>
         </section>
     </main>

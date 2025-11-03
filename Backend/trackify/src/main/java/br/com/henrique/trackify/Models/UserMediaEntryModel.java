@@ -3,6 +3,8 @@ package br.com.henrique.trackify.Models;
 import br.com.henrique.trackify.Enums.MediaStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +22,7 @@ public class UserMediaEntryModel {
     private String id;
 
     @Column(name = "status", nullable = false, unique = false)
+    @Enumerated(EnumType.STRING)
     private MediaStatusEnum status;
 
     @Column(name = "rating", nullable = true, unique = false)
