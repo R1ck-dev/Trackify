@@ -100,15 +100,16 @@ function populateMediaList(mediaList) {
 
         mediaCard.className = 'media-card';
 
-        mediaCard.innerHTML = `
-            <img src="${media.coverImageUrl || 'assets/images/catatau_placeholder.png'}" alt="" class="media-card-image">
-            <div class="media-card-content">
-                <h3 class="media-card-title">${media.title}</h3>
-                <p class="media-card-author">por ${media.author}</p>
-                <span class="media-card-status">${media.status}</span>
-                <p class="media-card-rating">Nota: ${media.rating || 'N/A'}</p>
-            </div>
-            `;
+        mediaCard.innerHTML = `<div class="media-card">
+                                    <img src="${media.coverImageUrl || 'assets/images/placeholder.png'}" alt="Capa">
+                                    <div class="media-card-content">
+                                        <h3>${media.title}</h3>
+                                        <p>${media.author}</p>
+                                        <p>Status: ${media.status}</p>
+                                        <p>Nota: ${media.rating}</p>
+                                    </div>
+                                    </div>
+                                    `;
 
             listContainer.appendChild(mediaCard);
     });
