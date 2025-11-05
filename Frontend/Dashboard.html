@@ -11,13 +11,14 @@
         <h1>Trackify</h1>
         <button id="logout-button">Sair da Conta</button>
     </header>
+<!-- ------------------------------------------------------------------------------------------------- -->
     <main>
         <section class="welcome-message">
             <h2>Seja Bem-Vindo <span id="user-username">...</span></h2>
             <p>Seu Email: <span id="user-email">...</span></p>
             <p>Seu Nível de Acesso: <span id="user-role">...</span></p>
         </section>
-
+<!-- ------------------------------------------------------------------------------------------------- -->
         <section>
             <form id="create-media">
                 <label for="create-media__title">Título</label>
@@ -59,12 +60,61 @@
                 <button type="submit">Criar Mídia</button>
             </form>
         </section>
+<!-- ------------------------------------------------------------------------------------------------- -->
         <hr>
         <section class="media-library">
             <h2>Minha Biblioteca</h2>
             <div id="media-list" class="media-list-container">
                 <p id="media-list-placeholder">Carregando sua biblioteca...</p>
             </div>
+        </section>
+<!-- ------------------------------------------------------------------------------------------------- -->
+        <section>
+            <div id="edit-modal" class="modal-backdrop">
+                <div class="modal-content">
+                    
+                    <div class="modal-header">
+                        <h2>Editar Mídia</h2>
+                        <button id="modal-close-btn" class="modal-close">&times;</button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <form id="edit-form">
+                            <input type="hidden" id="edit-media-id">
+
+                            <div class="form-group-readonly">
+                                <strong>Título:</strong> 
+                                <span id="edit-media-title">Carregando...</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-media-status">Status</label>
+                                <select id="edit-media-status">
+                                    <option value="WANT_TO_READ">Quero Ler</option>
+                                    <option value="READING">Lendo</option>
+                                    <option value="COMPLETED">Completo</option>
+                                    <option value="DROPPED">Dropado</option>
+                                    <option value="ON_PACE">Nos Semanais</option>
+                                    <option value="HIATUS">Em Hiato</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-media-rating">Nota (0-10)</label>
+                                <input type="number" id="edit-media-rating" min="0" max="10">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-media-notes">Notas Pessoais</label>
+                                <textarea id="edit-media-notes" rows="4"></textarea>
+                            </div>
+
+                            <button type="submit" class="modal-save-btn">Salvar Alterações</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </section>
     </main>
 

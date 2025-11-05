@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    
     checkAuthAndLoadData();
 
     const logoutButton = document.getElementById('logout-button');
@@ -8,12 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = 'LoginScreen.html';
     });
 
-    const createMediaForm = document.getElementById('create-media')
-
+    const createMediaForm = document.getElementById('create-media');
     createMediaForm.addEventListener('submit', async function(event) {
-        
-        event.preventDefault();
 
+        event.preventDefault();
         try {
             const title = document.getElementById('create-media__title').value;
             const author = document.getElementById('create-media__author').value;
@@ -23,70 +22,81 @@ document.addEventListener('DOMContentLoaded', function() {
             const description = document.getElementById('create-media__description').value;
             const ratingInput = document.getElementById('create-media__rating').value;
             const personalNotes = document.getElementById('create-media__personal-notes').value;
-
             const rating = ratingInput ? parseInt(ratingInput, 10) : null;
-
             const mediaData = {
-                title: title,
-                author: author,
-                type: type,
-                status: status,
-                coverImageUrl: coverImageUrl || null,
-                description: description || null,
-                rating: rating,
-                personalNotes: personalNotes || null
+                title: title, author: author, type: type, status: status,
+                coverImageUrl: coverImageUrl || null, description: description || null,
+                rating: rating, personalNotes: personalNotes || null
             };
-
             const newMedia = await createMediaEntry(mediaData);
-
             alert(`Mídia "${newMedia.title}" salva com sucesso!`);
-
             createMediaForm.reset();
             loadAndDisplayMedia();
-
         } catch (error) {
             console.error('Erro ao salvar mídia: ', error.message);
             alert(error.message);
         }
-    })
+    });
+
+    const editModal = document.getElementById('edit-modal');
+    const closeModalBtn = document.getElementById('modal-close-btn');
+
+    // Ouvinte para FECHAR no "X"
+    closeModalBtn.addEventListener('click', function() {
+        editModal.classList.remove('is-active');
+    });
+    
+    editModal.addEventListener('click', function(event) {
+        if (event.target === editModal) {
+            editModal.classList.remove('is-active');
+        }
+    });
 
     const mediaListContainer = document.getElementById('media-list');
-
     mediaListContainer.addEventListener('click', function(event) {
-
+        
         const clickedElement = event.target;
+        
+        // 1. Verificação de DELEÇÃO
         const deleteButton = clickedElement.closest('.media-card-delete-btn');
-
         if (deleteButton) {
             const mediaId = deleteButton.dataset.mediaId;
             handleDeleteMedia(mediaId, deleteButton);
+            return; 
         }
-    })
-})
+
+        // 2. Verificação de EDIÇÃO
+        const editButton = clickedElement.closest('.media-card-edit-btn');
+        if (editButton) {
+
+            openEditModal(editButton);
+        }
+    });
+
+}); // FIM DO DOMCONTENTLOADED
 
 async function checkAuthAndLoadData(params) {
+
     try {
         const userData = await fetchUserData();
-
         populateUserData(userData);
         await loadAndDisplayMedia();
-
     } catch (error) {
         console.error('Erro na autenticação: ', error.message);
         alert('Sua sessão expirou ou é inválida. Por favor, faça login novamente.');
-
         window.location.href = 'LoginScreen.html';
     }
 }
 
-
 function populateUserData(userData) {
+
     document.getElementById('user-username').textContent = userData.username;
     document.getElementById('user-email').textContent = userData.email;
     document.getElementById('user-role').textContent = userData.role;
 }
 
 async function loadAndDisplayMedia() {
+
     try {
         const mediaList = await fetchMediaData();
         populateMediaList(mediaList);
@@ -97,11 +107,10 @@ async function loadAndDisplayMedia() {
 }
 
 function populateMediaList(mediaList) {
+
     const listContainer = document.getElementById('media-list');
     const placeholder = document.getElementById('media-list-placeholder');
-
     listContainer.innerHTML = '';
-
     if (mediaList.length === 0) {
         placeholder.textContent = 'Sua biblioteca está vazia. Adicione sua primeira mídia no formulário acima!';
         listContainer.appendChild(placeholder);
@@ -110,50 +119,72 @@ function populateMediaList(mediaList) {
 
     mediaList.forEach(media => {
         const mediaCard = document.createElement('div');
-
-        mediaCard.className = 'media-card';
+        mediaCard.className = 'media-card'; 
 
         mediaCard.innerHTML = `
-                                    <img src="${media.coverImageUrl || 'assets/images/placeholder.png'}" alt="Capa">
-                                    <div class="media-card-content">
-                                        <h3>${media.title}</h3>
-                                        <p>${media.author}</p>
-                                        <p>Status: ${media.status}</p>
-                                        <p>Nota: ${media.rating}</p>
-                                        <button type="button" 
-                                                class="media-card-delete-btn" 
-                                                data-media-id="${media.id}">
-                                            Excluir
-                                        </button>
-                                    </div>
-                                    `;
+            <img src="${media.coverImageUrl || 'assets/images/placeholder.png'}" 
+                alt="Capa de ${media.title}" class="media-card-image"> 
+            
+            <div class="media-card-content">
+                <h3 class="media-card-title">${media.title}</h3>
+                <p class="media-card-author">${media.author}</p>
+                <span class="media-card-status">${media.status}</span>
+                <span class="media-card-rating">Nota: ${media.rating || 'N/A'}</span>
 
-            listContainer.appendChild(mediaCard);
+                <div class="media-card-actions">
+                    <button type="button" 
+                            class="media-card-edit-btn" 
+                            data-media-id="${media.id}"
+                            data-title="${media.title}"
+                            data-status="${media.status}"
+                            data-rating="${media.rating || ''}"
+                            data-notes="${media.personalNotes || ''}"
+                    >
+                        Editar
+                    </button>
+                    <button type="button" 
+                            class="media-card-delete-btn" 
+                            data-media-id="${media.id}">
+                        Excluir
+                    </button>
+                </div>
+            </div>
+        `;
+
+        listContainer.appendChild(mediaCard);
     });
 }
 
-async function handleDeleteMedia(mediaId, buttonElement) {
-    const isConfirmed = window.confirm('Tem certeza que deseja excluir esta mídia?');
+function openEditModal(editButton) {
+
+    const mediaData = editButton.dataset;
+
+    const editModal = document.getElementById('edit-modal');
     
+    document.getElementById('edit-media-id').value = mediaData.mediaId;
+    document.getElementById('edit-media-title').textContent = mediaData.title; 
+    document.getElementById('edit-media-status').value = mediaData.status;
+    document.getElementById('edit-media-rating').value = mediaData.rating;
+    document.getElementById('edit-media-notes').value = mediaData.notes;
+
+    editModal.classList.add('is-active');
+}
+
+
+async function handleDeleteMedia(mediaId, buttonElement) {
+
+    const isConfirmed = window.confirm('Tem certeza que deseja excluir esta mídia?');
     if (!isConfirmed) {
-        return
+        return;
     }
-
     try {
-        
         await deleteMediaEntry(mediaId);
-
         const cardToRemove = buttonElement.closest('.media-card');
-
         if (cardToRemove) {
             cardToRemove.remove(); 
         }
-
     } catch (error) {
         console.error('Erro ao deletar mídia:', error.message);
         alert('Não foi possível excluir a mídia. Tente novamente.');
     }
-
-    console.log(`Usuário confirmou! Deletando mídia com ID: ${mediaId}`);
-
 }

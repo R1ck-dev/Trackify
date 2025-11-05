@@ -220,28 +220,166 @@ main {
     font-style: italic;
 }
 
+.media-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.media-card-edit-btn,
 .media-card-delete-btn {
-    margin-top: 1rem; 
-    padding: 0.5rem; 
-    background-color: #dc3545; 
-    color: white;
+    flex: 1;
+    padding: 0.6rem;
     font-weight: 600;
     font-size: 0.875rem;
     border: none;
-    border-radius: var(--radius); 
+    border-radius: var(--radius);
     cursor: pointer;
-    transition: background-color var(--transition);
+    text-align: center;
+    transition: all var(--transition);
 }
 
-.media-card-delete-btn:hover {
-    background-color: #c82333; 
+/* Botão Editar */
+.media-card-edit-btn {
+    background-color: #007bff;
+    color: white;
 }
+.media-card-edit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Botão Excluir */
+.media-card-delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+.media-card-delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* =================================================== */
 
 footer {
     margin-top: auto;
     text-align: center;
     padding: 1rem;
     color: var(--gray);
+}
+
+.modal-backdrop {
+    display: none; 
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background-color: var(--card-bg); 
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 500px; 
+    animation: fadeIn 0.3s ease; 
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.modal-header h2 {
+    color: var(--text);
+    font-size: 1.25rem;
+}
+
+.modal-close {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--gray);
+    background: none;
+    border: none;
+    cursor: pointer;
+    line-height: 1; 
+    transition: color var(--transition);
+}
+.modal-close:hover {
+    color: var(--primary);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+#edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; 
+}
+
+.form-group-readonly {
+    font-size: 1rem;
+    color: var(--gray);
+}
+.form-group-readonly strong {
+    color: var(--text);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.form-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+#edit-form input[type="number"],
+#edit-form select,
+#edit-form textarea {
+    padding: 0.8rem;
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    background: transparent;
+    color: var(--text);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+#edit-form input[type="number"]:focus,
+#edit-form select:focus,
+#edit-form textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(106, 90, 205, 0.15);
+    outline: none;
+}
+
+.modal-save-btn {
+    margin-top: 1rem;
+    padding: 0.9rem;
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background var(--transition);
+}
+.modal-save-btn:hover {
+    background: var(--primary-dark);
+}
+
+.modal-backdrop.is-active {
+    display: flex; 
+    align-items: center;
+    justify-content: center;
 }
 
 @keyframes fadeIn {
