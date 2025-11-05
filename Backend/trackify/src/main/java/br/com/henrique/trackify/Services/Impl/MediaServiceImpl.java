@@ -3,6 +3,7 @@ package br.com.henrique.trackify.Services.Impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -103,5 +104,20 @@ public class MediaServiceImpl implements MediaService {
             return responseDTOList;
     }
 // ---------------------------------------------------------------------------------------------------
+
+    @Override
+    public void deleteMediaEntry(String mediaId, Authentication authentication) {
+        UserModel currentUser = (UserModel) authentication.getPrincipal();
+
+        UserMediaEntryModel mediaEntry = userMediaEntryRepository.findById(mediaId)
+                .orElseThrow(() -> new RuntimeException("Mídia não encontrada com ID: " + mediaId));
+
+        if (!mediaEntry.getUser().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("Você não tem permissão para excluir essa mídia.");
+        }
+
+        userMediaEntryRepository.deleteById(mediaId);
+
+    }
 
 }

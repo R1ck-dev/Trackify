@@ -49,6 +49,19 @@ document.addEventListener('DOMContentLoaded', function() {
             alert(error.message);
         }
     })
+
+    const mediaListContainer = document.getElementById('media-list');
+
+    mediaListContainer.addEventListener('click', function(event) {
+
+        const clickedElement = event.target;
+        const deleteButton = clickedElement.closest('.media-card-delete-btn');
+
+        if (deleteButton) {
+            const mediaId = deleteButton.dataset.mediaId;
+            handleDeleteMedia(mediaId, deleteButton);
+        }
+    })
 })
 
 async function checkAuthAndLoadData(params) {
@@ -100,17 +113,47 @@ function populateMediaList(mediaList) {
 
         mediaCard.className = 'media-card';
 
-        mediaCard.innerHTML = `<div class="media-card">
+        mediaCard.innerHTML = `
                                     <img src="${media.coverImageUrl || 'assets/images/placeholder.png'}" alt="Capa">
                                     <div class="media-card-content">
                                         <h3>${media.title}</h3>
                                         <p>${media.author}</p>
                                         <p>Status: ${media.status}</p>
                                         <p>Nota: ${media.rating}</p>
-                                    </div>
+                                        <button type="button" 
+                                                class="media-card-delete-btn" 
+                                                data-media-id="${media.id}">
+                                            Excluir
+                                        </button>
                                     </div>
                                     `;
 
             listContainer.appendChild(mediaCard);
     });
+}
+
+async function handleDeleteMedia(mediaId, buttonElement) {
+    const isConfirmed = window.confirm('Tem certeza que deseja excluir esta mídia?');
+    
+    if (!isConfirmed) {
+        return
+    }
+
+    try {
+        
+        await deleteMediaEntry(mediaId);
+
+        const cardToRemove = buttonElement.closest('.media-card');
+
+        if (cardToRemove) {
+            cardToRemove.remove(); 
+        }
+
+    } catch (error) {
+        console.error('Erro ao deletar mídia:', error.message);
+        alert('Não foi possível excluir a mídia. Tente novamente.');
+    }
+
+    console.log(`Usuário confirmou! Deletando mídia com ID: ${mediaId}`);
+
 }

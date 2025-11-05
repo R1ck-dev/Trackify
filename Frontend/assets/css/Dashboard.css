@@ -166,14 +166,12 @@ main {
     color: var(--primary);
 }
 
-/* ===== Grid de cards ajustado ===== */
 .media-list-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.5rem;
 }
 
-/* ===== Estilo dos cards da biblioteca ===== */
 .media-card {
     display: flex;
     flex-direction: column;
@@ -220,6 +218,23 @@ main {
 #media-list-placeholder {
     color: var(--gray);
     font-style: italic;
+}
+
+.media-card-delete-btn {
+    margin-top: 1rem; 
+    padding: 0.5rem; 
+    background-color: #dc3545; 
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: var(--radius); 
+    cursor: pointer;
+    transition: background-color var(--transition);
+}
+
+.media-card-delete-btn:hover {
+    background-color: #c82333; 
 }
 
 footer {

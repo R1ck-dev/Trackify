@@ -120,9 +120,32 @@ async function fetchMediaData() {
 
     if (!response.ok) {
         console.error('Falha ao buscar dados de mídia. Status: ', response.status);
-        throw new Error('Falha na autenticação.');
+        throw new Error('Falha buscar dados de mídia.');
     }
 
     const mediaData = await response.json();
     return mediaData;
+}
+
+async function deleteMediaEntry(mediaId) {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+        throw new Error('Usuário não autenticado. Token não encontrado.');
+    }
+
+    const response = await fetch(`${API_BASE_URL}/media/${mediaId}`, {
+        method: "DELETE",
+        
+        headers: {
+            'Content-Type': 'application/json',
+
+            'Authorization': 'Bearer ' + token
+        }
+    });
+
+    if (!response.ok) {
+        console.error('Falha ao deletar dados de mídia. Status: ', response.status);
+        throw new Error('Falha ao deletar dados de mídia.');
+    }
 }
