@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const editModal = document.getElementById('edit-modal');
     const closeModalBtn = document.getElementById('modal-close-btn');
 
-    // Ouvinte para FECHAR no "X"
     closeModalBtn.addEventListener('click', function() {
         editModal.classList.remove('is-active');
     });
@@ -57,7 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const clickedElement = event.target;
         
-        // 1. Verificação de DELEÇÃO
         const deleteButton = clickedElement.closest('.media-card-delete-btn');
         if (deleteButton) {
             const mediaId = deleteButton.dataset.mediaId;
@@ -65,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return; 
         }
 
-        // 2. Verificação de EDIÇÃO
         const editButton = clickedElement.closest('.media-card-edit-btn');
         if (editButton) {
 
@@ -73,6 +70,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    const editForm = document.getElementById('edit-form');
+
+    editForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        try {
+            const mediaId = document.getElementById('edit-media-id').value;
+            const status = document.getElementById('edit-media-status').value;
+            const ratingInput = document.getElementById('edit-media-rating').value;
+            const personalNotes = document.getElementById('edit-media-notes').value;
+
+            const updatedData = {
+                status: status,
+                rating: ratingInput ? parseInt(ratingInput, 10) : null,
+                personalNotes: personalNotes || null
+            };
+
+            const updatedMedia = await updateMediaEntry(mediaId, updatedData);
+
+            alert('Mídia atualizada com sucesso!');
+
+            editModal.classList.remove('is-active');
+
+            await loadAndDisplayMedia();
+        } catch (error) {
+            console.error('Erro ao atualizar mídia:', error.message);
+            alert(error.message);
+        }
+    });
 }); // FIM DO DOMCONTENTLOADED
 
 async function checkAuthAndLoadData(params) {
@@ -128,7 +154,7 @@ function populateMediaList(mediaList) {
             <div class="media-card-content">
                 <h3 class="media-card-title">${media.title}</h3>
                 <p class="media-card-author">${media.author}</p>
-                <span class="media-card-status">${media.status}</span>
+                <span class="media-card-status">${formatMediaStatus(media.status)}</span>
                 <span class="media-card-rating">Nota: ${media.rating || 'N/A'}</span>
 
                 <div class="media-card-actions">
@@ -186,5 +212,24 @@ async function handleDeleteMedia(mediaId, buttonElement) {
     } catch (error) {
         console.error('Erro ao deletar mídia:', error.message);
         alert('Não foi possível excluir a mídia. Tente novamente.');
+    }
+}
+
+function formatMediaStatus(statusEnum) {
+    switch (statusEnum) {
+        case 'WANT_TO_READ':
+            return 'Quero Ler';
+        case 'READING':
+            return 'Lendo';
+        case 'COMPLETED':
+            return 'Completo';
+        case 'DROPPED':
+            return 'Dropado';
+        case 'ON_PACE':
+            return 'Nos Semanais'; 
+        case 'HIATUS':
+            return 'Em Hiato';
+        default:
+            return statusEnum; 
     }
 }

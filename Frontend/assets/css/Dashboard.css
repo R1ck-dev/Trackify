@@ -239,7 +239,6 @@ main {
     transition: all var(--transition);
 }
 
-/* Botão Editar */
 .media-card-edit-btn {
     background-color: #007bff;
     color: white;
@@ -248,7 +247,6 @@ main {
     background-color: #0056b3;
 }
 
-/* Botão Excluir */
 .media-card-delete-btn {
     background-color: #dc3545;
     color: white;
@@ -256,8 +254,6 @@ main {
 .media-card-delete-btn:hover {
     background-color: #c82333;
 }
-
-/* =================================================== */
 
 footer {
     margin-top: auto;

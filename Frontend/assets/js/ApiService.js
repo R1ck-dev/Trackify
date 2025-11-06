@@ -149,3 +149,30 @@ async function deleteMediaEntry(mediaId) {
         throw new Error('Falha ao deletar dados de mídia.');
     }
 }
+
+async function updateMediaEntry(mediaId, updateData) {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+        throw new Error('Usuário não autenticado. Token não encontrado.');
+    }
+
+    const response = await fetch(`${API_BASE_URL}/media/${mediaId}`, {
+        method: 'PUT',
+
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+
+        body: JSON.stringify(updateData)
+    });
+
+    if (!response.ok) {
+        console.error('Falha ao atualizar mídia. Status:', response.status);
+        throw new Error('Falha ao atualizar a mídia. Verifique os dados.');
+    }
+
+    const updatedMedia = await response.json();
+    return updatedMedia;
+}

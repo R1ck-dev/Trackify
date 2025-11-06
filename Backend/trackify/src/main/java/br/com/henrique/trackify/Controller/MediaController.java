@@ -4,8 +4,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.henrique.trackify.DTOs.MediaDTO;
+import br.com.henrique.trackify.DTOs.UpdateMediaEntryDTO;
 import br.com.henrique.trackify.DTOs.Responses.GetMediasFromUserDTO;
 import br.com.henrique.trackify.DTOs.Responses.ResponseToCreateMediaDTO;
+import br.com.henrique.trackify.DTOs.Responses.ResponseToUpdateMediaDTO;
 import br.com.henrique.trackify.Services.MediaService;
 
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/media")
@@ -57,4 +61,11 @@ public class MediaController {
         return ResponseEntity.noContent().build();
     }
     
+    @PutMapping("/{mediaId}")
+    public ResponseEntity<ResponseToUpdateMediaDTO> updateMedia(@PathVariable String mediaId, @RequestBody UpdateMediaEntryDTO updateData, Authentication authentication) {
+        
+        ResponseToUpdateMediaDTO response = mediaService.updateMedia(mediaId, updateData, authentication);
+        
+        return ResponseEntity.ok(response);
+    }
 }

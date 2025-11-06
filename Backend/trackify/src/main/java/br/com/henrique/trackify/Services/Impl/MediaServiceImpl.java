@@ -8,8 +8,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import br.com.henrique.trackify.DTOs.MediaDTO;
+import br.com.henrique.trackify.DTOs.UpdateMediaEntryDTO;
 import br.com.henrique.trackify.DTOs.Responses.GetMediasFromUserDTO;
 import br.com.henrique.trackify.DTOs.Responses.ResponseToCreateMediaDTO;
+import br.com.henrique.trackify.DTOs.Responses.ResponseToUpdateMediaDTO;
 import br.com.henrique.trackify.Models.MediaModel;
 import br.com.henrique.trackify.Models.UserMediaEntryModel;
 import br.com.henrique.trackify.Models.UserModel;
@@ -116,8 +118,48 @@ public class MediaServiceImpl implements MediaService {
             throw new AccessDeniedException("Você não tem permissão para excluir essa mídia.");
         }
 
-        userMediaEntryRepository.deleteById(mediaId);
+        userMediaEntryRepository.delete(mediaEntry);
 
     }
+// ---------------------------------------------------------------------------------------------------
 
+    @Override
+    public ResponseToUpdateMediaDTO updateMedia(String mediaId, UpdateMediaEntryDTO updateData,Authentication authentication) {
+        UserModel currentUser = (UserModel) authentication.getPrincipal();
+
+        UserMediaEntryModel mediaEntry = userMediaEntryRepository.findById(mediaId)
+                .orElseThrow(() -> new RuntimeException("Mídia não encontrada com ID: " + mediaId));
+
+        if (!mediaEntry.getUser().getId().equals(currentUser.getId())) {
+            throw new AccessDeniedException("Você não tem permissão para excluir essa mídia");
+        }
+
+        if (updateData.getStatus() != null) {
+            mediaEntry.setStatus(updateData.getStatus());
+        }
+
+        if (updateData.getRating() != null) {
+            mediaEntry.setRating(updateData.getRating());
+        }
+
+        if (updateData.getPersonalNotes() != null && !updateData.getPersonalNotes().isEmpty()) {
+            mediaEntry.setPersonalNotes(updateData.getPersonalNotes());
+        }
+
+        UserMediaEntryModel updatedEntry = userMediaEntryRepository.save(mediaEntry);
+
+        ResponseToUpdateMediaDTO response = transformResponseUpdate(updatedEntry);
+
+        return response;
+    }
+
+    public ResponseToUpdateMediaDTO transformResponseUpdate(UserMediaEntryModel updatedEntry) {
+        ResponseToUpdateMediaDTO response = new ResponseToUpdateMediaDTO();
+
+        response.setStatus(updatedEntry.getStatus());
+        response.setRating(updatedEntry.getRating());
+        response.setPersonalNotes(updatedEntry.getPersonalNotes());
+        
+        return response;
+    }
 }
