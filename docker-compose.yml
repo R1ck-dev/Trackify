@@ -1,0 +1,41 @@
+services:
+
+  db:
+    image: mysql:8.0 
+    container_name: trackify-db
+    environment:
+      MYSQL_DATABASE: 'trackify' 
+      MYSQL_USER: 'admin'        
+      MYSQL_PASSWORD: 'admin'    
+      MYSQL_ROOT_PASSWORD: 'root' 
+    ports:
+      - "3306:3306" 
+    volumes:
+      - mysql_data:/var/lib/mysql 
+
+  backend:
+    container_name: trackify-backend
+    build:
+      context: ./Backend/trackify 
+      dockerfile: Dockerfile
+    depends_on:
+      - db 
+    restart: on-failure
+    ports:
+      - "8080:8080" 
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://db:3306/trackify?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
+      SPRING_DATASOURCE_USERNAME: 'admin'
+      SPRING_DATASOURCE_PASSWORD: 'admin'
+      SPRING_PROFILES_ACTIVE: 'docker' 
+
+  frontend:
+    container_name: trackify-frontend
+    build:
+      context: ./Frontend 
+      dockerfile: Dockerfile
+    ports:
+      - "5500:80" 
+
+volumes:
+  mysql_data:

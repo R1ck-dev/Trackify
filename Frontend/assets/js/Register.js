@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Usuário cadastrado:', newUser);
             alert('Usuário cadastrado com sucesso!');
             
-            window.location.href = 'LoginScreen.html';
+            window.location.href = 'index.html';
         }
         catch (error) {
             //Erros de rede

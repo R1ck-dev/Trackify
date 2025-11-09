@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     logoutButton.addEventListener('click', function() {
         localStorage.removeItem('authToken');
         alert('Você foi desconectado');
-        window.location.href = 'LoginScreen.html';
+        window.location.href = 'index.html';
     });
 
     const createMediaForm = document.getElementById('create-media');
@@ -110,7 +110,7 @@ async function checkAuthAndLoadData(params) {
     } catch (error) {
         console.error('Erro na autenticação: ', error.message);
         alert('Sua sessão expirou ou é inválida. Por favor, faça login novamente.');
-        window.location.href = 'LoginScreen.html';
+        window.location.href = 'index.html';
     }
 }
 
