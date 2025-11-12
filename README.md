@@ -4,6 +4,14 @@ Um gerenciador de mídias (livros, mangás, etc.) full-stack. Este projeto foi c
 
 ---
 
+### 🌐 Aplicação Ao Vivo
+* **Frontend (Netlify):** **[https://trackify-midia.netlify.app/](https://trackify-midia.netlify.app/)**
+* **Backend (Render):** **`https://trackify-backend-4d5f.onrender.com`**
+
+*(Nota: O backend hospedado no plano gratuito do Render pode "dormir" após 15 minutos de inatividade. O primeiro login pode levar até 60 segundos para "acordar" o servidor.)*
+
+---
+
 ## ✨ Funcionalidades (Features)
 
 * **Autenticação de Usuário:** Sistema completo de Registro e Login com Tokens JWT (JSON Web Tokens).
@@ -44,27 +52,44 @@ O projeto é dividido em duas partes: `backend` e `frontend`.
 
 ---
 
-## 🛠️ Como Rodar Localmente
+## 🛠️ Como Rodar Localmente (Docker)
+
+Este projeto é 100% "containerizado". A forma mais fácil de rodá-lo é com o Docker, pois ele configura o frontend, o backend e o banco de dados de uma só vez.
 
 ### Pré-requisitos
-* Java 17+
-* Maven
-* MySQL (ou um SGBD compatível)
-* VS Code com a extensão "Live Server" (para o frontend)
+* **Git**
+* **Docker** e **Docker Compose**
 
-### 1. Backend
-```bash
-# 1. Clone o repositório
-git clone [https://github.com/R1ck-dev/trackify.git](https://github.com/R1ck-dev/trackify.git)
+### Passo a Passo
 
-# 2. Navegue até a pasta do backend
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/R1ck-dev/Trackify.git](https://github.com/R1ck-dev/Trackify.git)
+    cd Trackify
+    ```
 
-# 3. Crie o arquivo de segredos
-# (Dentro de /src/main/resources/)
-# Crie o arquivo: application-local.properties
-# E adicione suas credenciais:
-spring.datasource.password=SUA_SENHA_DO_MYSQL
-jwt.secret=SEU_SEGREDO_JWT_LONGO
+2.  **Crie o arquivo de segredos do Docker:**
+    O `.gitignore` ignora os segredos. Você precisa criá-lo manualmente.
 
-# 4. Rode o projeto
-./mvnw spring-boot:run
+    * Crie o arquivo: `Backend/trackify/src/main/resources/application-docker.properties`
+    * Cole o seguinte conteúdo nele:
+
+    ```properties
+    # Diz ao Spring para criar/atualizar as tabelas no banco de dados do Docker
+    spring.jpa.hibernate.ddl-auto=update
+
+    # Adicione seu próprio segredo JWT longo e seguro aqui
+    jwt.secret=SEGREDO_JWT
+    ```
+
+3.  **Construir a imagem:**
+    Este comando irá construir as imagens do backend e frontend, baixar o MySQL e ligar os três contêineres juntos.
+
+    ```bash
+    sudo docker compose up --build
+    ```
+
+4.  **Acesse o App!**
+    * Frontend: **`http://localhost:5500`**
+    * Backend API: `http://localhost:8080`
+    * Banco de Dados (via Workbench): `localhost:3306` (usuário: `admin`, senha: `admin`)

@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'https://trackify-backend-4d5f.onrender.com';
 
 async function registerUser(username, email, password) {
     const userData = {
